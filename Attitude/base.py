@@ -5,8 +5,7 @@ import pygame
 MODULE_PATH = Path(__file__).parent
 
 # Constants used on all modules
-#FONT_FILE = MODULE_PATH / 'Jura-DemiBold.ttf'
-FONT_FILE = 'Jura-DemiBold.ttf'
+FONT_FILE = str(MODULE_PATH / 'Jura-DemiBold.ttf')
 EFIS_SIZE = (800, 800)
 MKR_COLOR = (200, 200, 200)
 SKY_COLOR = (80, 100, 180)
