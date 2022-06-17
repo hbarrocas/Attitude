@@ -1,19 +1,31 @@
 from pathlib import Path
 import pygame
 
-# Module directory. Font file resides here
-MODULE_PATH = Path(__file__).parent
+# Module directory.
+PATH_MODULE = Path(__file__).parent
 
-# Constants used on all modules
-FONT_FILE = str(MODULE_PATH / 'Jura-DemiBold.ttf')
-EFIS_SIZE = (800, 800)
-MKR_COLOR = (200, 200, 200)
-SKY_COLOR = (80, 100, 180)
-GND_COLOR = (160, 90, 0)
+# Constants
+FONT_FILE = str(PATH_MODULE/'Jura-DemiBold.ttf')
+FONT_SIZE_TAPE = 28
+FONT_SIZE_GAUGE = 40
 
-DISABLED_COLOR = (200, 0, 0)
+COLOR_BLACK = (0, 0, 0)
+COLOR_DARKGREY = (40, 40, 40)
+COLOR_GREEN = (0, 200, 0)
+COLOR_YELLOW = (200, 200, 0)
+COLOR_RED = (200, 0, 0)
+COLOR_MAGENTA = (200, 40, 150)
 
+COLOR_MARKER = (200, 200, 200)
+COLOR_DISABLED = COLOR_RED
+COLOR_TAPE_FG = COLOR_MARKER
+COLOR_TAPE_BG = COLOR_BLACK
+COLOR_GAUGE_FG = COLOR_MARKER
+COLOR_GAUGE_BG = COLOR_DARKGREY
+COLOR_SKY = (80, 100, 180)
+COLOR_GND = (160, 90, 0)
 COLOR_KEY = (0, 0, 0)
+
 
 # Disabled red cross - gets drawn over an instrument when disabled
 class Disabled:
@@ -22,9 +34,9 @@ class Disabled:
 		self.buffer = pygame.Surface(dim)
 		self.rect = self.buffer.get_rect()
 		self.buffer.set_colorkey (COLOR_KEY)
-		pygame.draw.rect (self.buffer, DISABLED_COLOR, self.rect, 8)
-		pygame.draw.line (self.buffer, DISABLED_COLOR, self.rect.topleft, self.rect.bottomright, 8)
-		pygame.draw.line (self.buffer, DISABLED_COLOR, self.rect.topright, self.rect.bottomleft, 8)
+		pygame.draw.rect (self.buffer, COLOR_DISABLED, self.rect, 8)
+		pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topleft, self.rect.bottomright, 8)
+		pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topright, self.rect.bottomleft, 8)
 
 	def surface (self):
 		return self.buffer
