@@ -5,9 +5,9 @@ SKY_COLOR = b.COLOR_SKY
 GND_COLOR = b.COLOR_GND
 M_COLOR_OVERLAY = b.COLOR_YELLOW
 M_COLOR_HORIZON = b.COLOR_MARKER
-M_LONG = 75
-M_SHORT = 25
-M_SPACING = 80
+M_LONG = 60
+M_SHORT = 20
+M_SPACING = 70
 C_KEY = b.COLOR_KEY
 
 
@@ -51,7 +51,7 @@ class ATTIndHorizon (b.EFISElement):
 		for mk_y in range (int(M_SPACING/2), M_SPACING*9, M_SPACING):
 			pygame.draw.line (self.tape, M_COLOR_HORIZON, (r.centerx-M_SHORT, r.centery-mk_y), (r.centerx+M_SHORT, r.centery-mk_y), 2)
 			pygame.draw.line (self.tape, M_COLOR_HORIZON, (r.centerx-M_SHORT, r.centery+mk_y), (r.centerx+M_SHORT, r.centery+mk_y), 2)
-		# Angle markings
+		# Angle of bank markings
 		self.protractor = pygame.Surface((400, 400))
 		self.protractor.set_colorkey (C_KEY)
 		M_ANGLE = [
@@ -59,7 +59,7 @@ class ATTIndHorizon (b.EFISElement):
 			math.pi/6,
 			math.pi/3,
 			5*math.pi/12,
-			math.pi/2,
+			#math.pi/2,
 			7*math.pi/12,
 			2*math.pi/3,
 			5*math.pi/6,
@@ -67,14 +67,15 @@ class ATTIndHorizon (b.EFISElement):
 		]
 		r = self.protractor.get_rect()
 		for angle in M_ANGLE:
-			pygame.draw.line (self.protractor, M_COLOR_HORIZON, self.radial(r.center, 150, angle), self.radial(r.center, 160, angle), 6)
+			pygame.draw.line (self.protractor, M_COLOR_HORIZON, b.radial(r.center, 150, angle), b.radial(r.center, 160, angle), 4)
+		# Levelled bank marker (inverted triangle)
+		pygame.draw.polygon (self.protractor, M_COLOR_HORIZON, [
+			(r.centerx, r.centery-150), (r.centerx-10, r.centery-170),
+			(r.centerx+10, r.centery-170), (r.centerx, r.centery-150)
+		], 0)
 		# Initialise
 		self.set_attitude(0, 0)
 
-
-	def radial (self, centre, radius, angle):
-		return (centre[0]+radius*math.cos(angle), centre[1]-radius*math.sin(angle))
-            
 	def set_attitude (self, aob, aop):
 		hzn_r = self.tape.get_rect()
 		hzn_r.height = hzn_r.width
@@ -91,7 +92,7 @@ class ATTIndHorizon (b.EFISElement):
 class ATTInd (b.EFISElement):
 	
 	def __init__ (self):
-		super().__init__ ((450, 450))
+		super().__init__ ((400, 400))
 		# Fixed markings
 		self.overlay = ATTIndOverlay (self.rect.size)
 		self.horizon = ATTIndHorizon (self.rect.size)

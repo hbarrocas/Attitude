@@ -1,13 +1,13 @@
 from pathlib import Path
-import pygame
+import pygame, math
 
 # Module directory.
 PATH_MODULE = Path(__file__).parent
 
 # Constants
 FONT_FILE = str(PATH_MODULE/'Jura-DemiBold.ttf')
-FONT_SIZE_TAPE = 28
-FONT_SIZE_GAUGE = 40
+FONT_SIZE_TAPE = 24
+FONT_SIZE_GAUGE = 32
 
 COLOR_BLACK = (0, 0, 0)
 COLOR_DARKGREY = (40, 40, 40)
@@ -15,6 +15,7 @@ COLOR_GREEN = (0, 200, 0)
 COLOR_YELLOW = (200, 200, 0)
 COLOR_RED = (200, 0, 0)
 COLOR_MAGENTA = (200, 40, 150)
+COLOR_CYAN = (60, 180, 250)
 
 COLOR_MARKER = (200, 200, 200)
 COLOR_DISABLED = COLOR_RED
@@ -22,7 +23,7 @@ COLOR_TAPE_FG = COLOR_MARKER
 COLOR_TAPE_BG = COLOR_BLACK
 COLOR_GAUGE_FG = COLOR_MARKER
 COLOR_GAUGE_BG = COLOR_DARKGREY
-COLOR_SKY = (80, 100, 180)
+COLOR_SKY = (30, 90, 180)
 COLOR_GND = (160, 90, 0)
 COLOR_KEY = (0, 0, 0)
 
@@ -62,3 +63,7 @@ class EFISElement:
 			self.buffer.blit (e.surface(), e.rect)
 		return self.buffer
 
+
+# Utility functions
+def radial (centre, radius, angle):
+	return (centre[0]+radius*math.cos(angle), centre[1]-radius*math.sin(angle))

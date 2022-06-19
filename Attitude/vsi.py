@@ -10,8 +10,8 @@ F_FILE = b.FONT_FILE
 F_SIZE = b.FONT_SIZE_TAPE
 # Markers
 M_COLOR = b.COLOR_MARKER
-M_SHORT = 12
-M_LONG = 25
+M_SHORT = 8
+M_LONG = 16
 M_COUNT = 4
 M_CENTRE = 2
 
@@ -39,7 +39,7 @@ class Scale (b.EFISElement):
 class VSI (b.EFISElement):
 	
 	def __init__ (self):
-		super().__init__((50, 450))
+		super().__init__((50, 400))
 		self.scale = Scale(self.rect.size)
 		self.elements.append (self.scale)
 		

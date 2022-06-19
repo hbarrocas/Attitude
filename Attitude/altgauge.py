@@ -29,7 +29,7 @@ class DisplayRoller (b.EFISElement):
 class Display (b.EFISElement):
 	
 	def __init__ (self):
-		super().__init__((130, 48))
+		super().__init__((110, 40))
 		self.buffer.set_colorkey(C_KEY)
 		self.buffer.fill (C_KEY)
 		self.text = pygame.font.Font (F_FILE, F_SIZE)
@@ -54,7 +54,7 @@ class Display (b.EFISElement):
 		self.FLdisp.fill (F_COLOR_BG)
 
 		# Rolling numbers' window (20 feet units)
-		w = pygame.Rect ((self.rect.right-40, self.rect.top+6), (38, 30))
+		w = pygame.Rect ((self.rect.right-40, self.rect.top+6), (32, 20))
 		self.buffer.set_clip (w)
 		self.roller = DisplayRoller ()
 		self.roller.rect.right = self.rect.w

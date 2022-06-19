@@ -11,12 +11,26 @@ G_COLOR_FG = b.COLOR_GAUGE_FG
 G_COLOR_BG = b.COLOR_GAUGE_BG
 
 M_COLOR = b.COLOR_MARKER
-M_LONG = 25
-M_SHORT = 12
+M_LONG = 20
+M_SHORT = 8
 M_COUNT = 24
 M_CENTRE = int(M_COUNT/2)
 
 C_KEY = (0, 0, 0)
+
+
+class Bug (b.EFISElement):
+
+	def __init__ (self):
+		super().__init__((60, 15))
+		self.buffer.set_colorkey(C_KEY)
+		self.buffer.fill (b.COLOR_CYAN)
+		r = self.rect
+		pygame.draw.polygon (self.buffer, C_KEY, [
+			r.midbottom, (r.centerx-10, r.top),
+			(r.centerx+10, r.top), r.midbottom
+		], 0)
+		self.value = 0
 
 
 class Tape (b.EFISElement):
@@ -26,16 +40,31 @@ class Tape (b.EFISElement):
 		super().__init__((self.M_SPACING * M_COUNT, dim[1]))
 		self.text = pygame.font.Font (F_FILE, F_SIZE)
 		self.textarea = {}
+		self.m_layer = pygame.Surface (self.rect.size)
+		self.m_layer.set_colorkey (C_KEY)
 		for mkr_n in range (M_COUNT):
 			mkr_x = mkr_n * self.M_SPACING
 			mkr_y = M_SHORT if mkr_n % 3 else M_LONG
-			pygame.draw.line (self.buffer, M_COLOR, (mkr_x, self.rect.bottom), (mkr_x, self.rect.bottom-mkr_y), 2)
+			pygame.draw.line (self.m_layer, M_COLOR, (mkr_x, self.rect.bottom), (mkr_x, self.rect.bottom-mkr_y), 2)
+		self.bug = Bug ()
+		self.bug.rect.bottom = self.rect.bottom
+		self.elements.append(self.bug)
 		self.centre = 0
+		self.bug_value (290)
 		self.set_value(0)
 
+	def bug_value (self, value):
+		self.bug.value = value
+		
 	def set_value (self, value):
 		value = value/10
 		self.centre = int(value) if int(value) % 3 == 0 else self.centre 
+		
+		self.buffer.fill(F_COLOR_BG)
+		self.buffer.blit (self.m_layer, (0, 0))
+		# reset bug position
+		self.bug.rect.centerx = int(self.M_SPACING * (M_CENTRE + self.bug.value/10 - self.centre))
+		
 		val_range = range (self.centre-M_CENTRE, self.centre+M_CENTRE, 3)
 		val_pos = range (0, self.M_SPACING * M_COUNT, self.M_SPACING*3)
 		for n in range (len(val_pos)):
@@ -52,7 +81,7 @@ class Tape (b.EFISElement):
 class Display (b.EFISElement):
 	
 	def __init__ (self):
-		super().__init__((90, 60))
+		super().__init__((80, 48))
 		self.buffer.set_colorkey (C_KEY)
 		self.buffer.fill (C_KEY)
 		self.text = pygame.font.Font (F_FILE, G_SIZE)
@@ -83,7 +112,7 @@ class Display (b.EFISElement):
 class Compass (b.EFISElement):
 	
 	def __init__ (self):
-		super().__init__ ((450, 60))
+		super().__init__ ((400, 50))
 		#self.buffer.set_colorkey(COLOR_KEY)
 		self.tape = Tape(self.rect.size)
 		self.gauge = Display ()

@@ -10,7 +10,7 @@ C_KEY = b.COLOR_KEY
 class Display (b.EFISElement):
 	
 	def __init__ (self):
-		super().__init__((100, 48))
+		super().__init__((80, 40))
 		self.buffer.set_colorkey (C_KEY)
 		self.buffer.fill (C_KEY)
 		self.text = pygame.font.Font (F_FILE, F_SIZE)

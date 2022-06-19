@@ -9,8 +9,8 @@ F_COLOR = b.COLOR_TAPE_FG
 M_COLOR = b.COLOR_MARKER
 M_COUNT = 10
 M_CENTRE = 5  # M_COUNT / 2
-M_SHORT = 10
-M_LONG  = 25
+M_SHORT = 8
+M_LONG  = 20
 
 
 class Tape (b.EFISElement):
@@ -64,8 +64,8 @@ class Tape (b.EFISElement):
 
 class ASI (b.EFISElement):
 	def __init__ (self):
-		super().__init__((100, 450))
-		self.tape = Tape((100, 450))
+		super().__init__((80, 400))
+		self.tape = Tape(self.rect.size)
 		
 		# Airspeed ranges (VS, VA, VNE, etc)
 		self.tape.ranges[len(self.tape.ranges):] = [

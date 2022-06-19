@@ -3,10 +3,10 @@ import Attitude.base as b
 
 C_KEY = b.COLOR_KEY
 # Frame 
-F_COLOR_FG = b.COLOR_GAUGE_FG
+F_COLOR_FG = b.COLOR_YELLOW
 F_COLOR_BG = b.COLOR_GAUGE_BG
 # Ball
-B_COLOR = (150, 150, 150)
+B_COLOR = b.COLOR_GAUGE_FG
 
 class SlipBall (b.EFISElement):
 
