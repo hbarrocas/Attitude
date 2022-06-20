@@ -11,7 +11,7 @@ M_SPACING = 70
 C_KEY = b.COLOR_KEY
 
 
-class ATTIndOverlay (b.EFISElement):
+class ATTIndOverlay (b.Layer):
 
 	def __init__ (self, dim):
 		super().__init__ (dim)
@@ -32,7 +32,7 @@ class ATTIndOverlay (b.EFISElement):
 		], 0)
 
 
-class ATTIndHorizon (b.EFISElement):
+class ATTIndHorizon (b.Layer):
 
 	def __init__ (self, dim):
 		super().__init__(dim)
@@ -89,16 +89,16 @@ class ATTIndHorizon (b.EFISElement):
 		r.center = self.buffer.get_rect().center
 		self.buffer.blit (rot_prt, r)
 
-class ATTInd (b.EFISElement):
+class ATTInd (b.Widget):
 	
-	def __init__ (self):
-		super().__init__ ((400, 400))
+	def __init__ (self, sfc, rect):
+		super().__init__ (sfc, rect)
 		# Fixed markings
 		self.overlay = ATTIndOverlay (self.rect.size)
 		self.horizon = ATTIndHorizon (self.rect.size)
 		self.set_value ({"bank": 0, "pitch": 0})
-		self.elements.append (self.horizon)
-		self.elements.append (self.overlay)
+		self.layers.append (self.horizon)
+		self.layers.append (self.overlay)
 	
 	def set_value (self, value):
 		self.horizon.set_attitude (value["bank"], value["pitch"])

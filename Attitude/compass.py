@@ -19,7 +19,7 @@ M_CENTRE = int(M_COUNT/2)
 C_KEY = (0, 0, 0)
 
 
-class Bug (b.EFISElement):
+class Bug (b.Layer):
 
 	def __init__ (self):
 		super().__init__((60, 15))
@@ -33,7 +33,7 @@ class Bug (b.EFISElement):
 		self.value = 0
 
 
-class Tape (b.EFISElement):
+class Tape (b.Layer):
 
 	def __init__ (self, dim):
 		self.M_SPACING = int(dim[0]/12)
@@ -48,13 +48,13 @@ class Tape (b.EFISElement):
 			pygame.draw.line (self.m_layer, M_COLOR, (mkr_x, self.rect.bottom), (mkr_x, self.rect.bottom-mkr_y), 2)
 		self.bug = Bug ()
 		self.bug.rect.bottom = self.rect.bottom
-		self.elements.append(self.bug)
+		self.layers.append(self.bug)
 		self.centre = 0
 		self.bug_value (290)
 		self.set_value(0)
 
 	def bug_value (self, value):
-		self.bug.value = value
+		self.bug.value = value % 360
 		
 	def set_value (self, value):
 		value = value/10
@@ -78,7 +78,7 @@ class Tape (b.EFISElement):
 
 			
 
-class Display (b.EFISElement):
+class Display (b.Layer):
 	
 	def __init__ (self):
 		super().__init__((80, 48))
@@ -109,16 +109,16 @@ class Display (b.EFISElement):
 		self.buffer.blit (fig, r)
 
 		
-class Compass (b.EFISElement):
+class Compass (b.Widget):
 	
-	def __init__ (self):
-		super().__init__ ((400, 50))
+	def __init__ (self, sfc, rect):
+		super().__init__ (sfc, rect)
 		#self.buffer.set_colorkey(COLOR_KEY)
 		self.tape = Tape(self.rect.size)
 		self.gauge = Display ()
 		self.gauge.rect.midbottom = self.rect.midbottom
-		self.elements.append(self.tape)
-		self.elements.append(self.gauge)
+		self.layers.append(self.tape)
+		self.layers.append(self.gauge)
 		self.set_value(0)
 		
 	def set_value (self, value):

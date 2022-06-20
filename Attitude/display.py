@@ -9,10 +9,10 @@ F_COLOR_TITLE_FG = b.COLOR_MARKER
 F_COLOR_BG = b.COLOR_TAPE_BG
 C_KEY = b.COLOR_KEY
 
-class Baro (b.EFISElement):
+class Baro (b.Widget):
 	
-	def __init__ (self):
-		super().__init__((130, 42))
+	def __init__ (self, sfc, rect):
+		super().__init__(sfc, rect)
 		self.text_title = pygame.font.Font (F_FILE, F_SIZE_TITLE)
 		self.text_val = pygame.font.Font (F_FILE, F_SIZE_VAL)
 		self.buffer.fill (F_COLOR_BG)
@@ -30,10 +30,10 @@ class Baro (b.EFISElement):
 		self.buffer.blit (fig, r)
 
 		
-class GSpeed (b.EFISElement):
+class GSpeed (b.Widget):
 	
-	def __init__ (self):
-		super().__init__((90, 42))
+	def __init__ (self, sfc, rect):
+		super().__init__(sfc, rect)
 		self.text_title = pygame.font.Font (F_FILE, F_SIZE_TITLE)
 		self.text_val = pygame.font.Font (F_FILE, F_SIZE_VAL)
 		self.buffer.fill (F_COLOR_BG)

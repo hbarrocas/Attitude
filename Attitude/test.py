@@ -4,6 +4,7 @@ from Attitude.pfd import PFD
 value = {
 	"ASI": 0,
 	"ALT": 0,
+	"ALT_BUG": 0,
 	"BARO": 1013,
 	"GS": 0,
 	"VSI": 0,
@@ -12,6 +13,14 @@ value = {
 	"SSI": 0
 }
 
+def action_inc ():
+	global value
+	value["ALT_BUG"] += 10
+	
+def action_dec ():
+	global value
+	value["ALT_BUG"] -= 10
+	
 def action_left ():
 	global value
 	value["ATT"]["bank"] -= 2
@@ -46,6 +55,8 @@ def exit ():
 
 # Setup key bindings
 keymap = {
+	pygame.K_PERIOD: action_inc,
+	pygame.K_COMMA: action_dec,
 	pygame.K_UP: action_up,
 	pygame.K_DOWN: action_down,
 	pygame.K_LEFT: action_left,
@@ -59,14 +70,17 @@ def run ():
 	
 	pygame.init ()
 	display = pygame.display.set_mode((800, 800))		
-	pfd = PFD()
+	pfd = PFD(display, display.get_rect())
 
 	while 1:
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN and event.key in keymap:
 				keymap[event.key]()
 
+		pfd.widget["ALT"].set_bug(value["ALT_BUG"])
 		pfd.set_value (value)
-		display.blit (pfd.surface(), (0, 0))
+
+		pfd.render()
+		
 		pygame.display.flip()
 

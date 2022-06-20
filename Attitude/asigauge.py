@@ -7,7 +7,7 @@ F_COLOR_FG = b.COLOR_GAUGE_FG
 F_COLOR_BG = b.COLOR_GAUGE_BG
 C_KEY = b.COLOR_KEY
 
-class Display (b.EFISElement):
+class Display (b.Layer):
 	
 	def __init__ (self):
 		super().__init__((80, 40))

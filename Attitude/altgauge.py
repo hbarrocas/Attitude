@@ -8,7 +8,7 @@ F_COLOR_FG = b.COLOR_GAUGE_FG
 F_COLOR_BG = b.COLOR_GAUGE_BG
 C_KEY = b.COLOR_KEY
 
-class DisplayRoller (b.EFISElement):
+class DisplayRoller (b.Layer):
 
 	def __init__ (self):
 		super().__init__((40, R_SIZE * 6))
@@ -26,7 +26,7 @@ class DisplayRoller (b.EFISElement):
 		self.rect.top = (-offset if value > 0 else -5+offset) * R_SIZE + 4
 
 
-class Display (b.EFISElement):
+class Display (b.Layer):
 	
 	def __init__ (self):
 		super().__init__((110, 40))
@@ -58,7 +58,7 @@ class Display (b.EFISElement):
 		self.buffer.set_clip (w)
 		self.roller = DisplayRoller ()
 		self.roller.rect.right = self.rect.w
-		self.elements.append (self.roller)
+		self.layers.append (self.roller)
 	
 	def set_value (self, value):
 		self.roller.set_value (value)

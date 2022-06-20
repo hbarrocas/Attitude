@@ -28,40 +28,51 @@ COLOR_GND = (160, 90, 0)
 COLOR_KEY = (0, 0, 0)
 
 
-# Disabled red cross - gets drawn over an instrument when disabled
-class Disabled:
+class Area:
 
-	def __init__ (self, dim):
-		self.buffer = pygame.Surface(dim)
-		self.rect = self.buffer.get_rect()
+	def __init__ (self, sfc):
+		self.buffer = sfc
+		self.rect = sfc.get_rect()
+		self.layers = []
+	
+	def render (self):
+		for x in self.layers:
+			self.buffer.blit (x.surface(), x.rect)
+
+
+class Layer (Area):
+	
+	def __init__ (self, size):
+		super().__init__(pygame.Surface(size))
+		
+	def surface (self):
+		self.render()
+		return self.buffer
+
+
+class Disabled (Layer):
+	
+	def __init__ (self, size):
+		super().__init__(size)
 		self.buffer.set_colorkey (COLOR_KEY)
 		pygame.draw.rect (self.buffer, COLOR_DISABLED, self.rect, 8)
 		pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topleft, self.rect.bottomright, 8)
 		pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topright, self.rect.bottomleft, 8)
 
-	def surface (self):
-		return self.buffer
-		
-		
-# Basic EFIS object. Can be nested to other EFISElements
-class EFISElement:
 
-	def __init__ (self, dim):
-		self.buffer = pygame.Surface (dim)
-		self.rect = self.buffer.get_rect()
-		self._disabled = Disabled(dim)
-		self.elements = []
+class Widget (Area):
 
+	def __init__ (self, sfc, rect):
+		super().__init__ (sfc.subsurface(rect))
+		self._disabled = Disabled (rect.size)
+		
 	def disable (self):
-		if self._disabled not in self.elements: self.elements.append (self._disabled)
-	
+		if self._disabled not in self.layers:
+			self.layers.append (self._disabled)
+
 	def enable (self):
-		if self._disabled in self.elements: self.elements.remove (self._disabled)
-				
-	def surface (self):
-		for e in self.elements:
-			self.buffer.blit (e.surface(), e.rect)
-		return self.buffer
+		if self._disabled in self.layers:
+			self.layers.remove (self._disabled)
 
 
 # Utility functions

@@ -14,7 +14,7 @@ M_LONG  = 20
 C_KEY = b.COLOR_KEY
 
 
-class Bug (b.EFISElement):
+class Bug (b.Layer):
 
 	def __init__ (self):
 		super().__init__((15, 60))
@@ -27,7 +27,7 @@ class Bug (b.EFISElement):
 		], 0)
 		self.value = 0
 
-class Tape (b.EFISElement):
+class Tape (b.Layer):
 
 	def __init__ (self, dim):
 		super().__init__((dim[0], dim[1]*2))
@@ -45,7 +45,7 @@ class Tape (b.EFISElement):
 			pygame.draw.line (self.m_layer, M_COLOR, (0, m_yl[n]), (M_LONG, m_yl[n]), 2)
 			pygame.draw.line (self.m_layer, M_COLOR, (0, m_ys[n]), (M_SHORT, m_ys[n]), 2)
 		self.bug = Bug ()
-		self.elements.append (self.bug)
+		self.layers.append (self.bug)
 		self.centre = 10
 		self.bug.value = 1
 		self.set_value(0)
@@ -64,9 +64,6 @@ class Tape (b.EFISElement):
 				
 			self.buffer.blit (self.m_layer, (0, 0))
 		
-			# reset bug position
-			self.bug.rect.centery = int(self.M_SPACING * (M_CENTRE - self.bug.value + self.centre))
-
 			# reset marker numeric values
 			val_range = range (self.centre+M_CENTRE, self.centre-M_CENTRE, -1)
 			for n in range(M_COUNT):
@@ -79,16 +76,18 @@ class Tape (b.EFISElement):
 		
 		# set tape offset relative to centre (target centery = M_CENTRE/2)
 		self.rect.centery = int(self.M_SPACING * (M_CENTRE/2 - (self.centre - value)))
+		# reset bug position
+		self.bug.rect.centery = int(self.M_SPACING * (M_CENTRE - self.bug.value + self.centre))
 		
 
-class ALT (b.EFISElement):
-	def __init__ (self):
-		super().__init__((110, 400))
+class ALT (b.Widget):
+	def __init__ (self, sfc, rect):
+		super().__init__(sfc, rect)
 		self.tape = Tape(self.rect.size)
 		self.gauge = gauge.Display ()
 		self.gauge.rect.midleft = (0, self.rect.centery)
-		self.elements.append (self.tape)
-		self.elements.append (self.gauge)
+		self.layers.append (self.tape)
+		self.layers.append (self.gauge)
 		self.set_value (0)
 
 	def set_bug (self, alt):
