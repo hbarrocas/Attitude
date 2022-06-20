@@ -8,12 +8,26 @@ F_COLOR = b.COLOR_MARKER
 M_COLOR = b.COLOR_MARKER
 M_COUNT = 10
 M_CENTRE = 5  # M_COUNT / 2
-M_SHORT = 10
-M_LONG  = 25
+M_SHORT = 8
+M_LONG  = 20
 
 C_KEY = b.COLOR_KEY
 
-class Tape (b.EFISElement):
+
+class Bug (b.Layer):
+
+	def __init__ (self):
+		super().__init__((15, 60))
+		self.buffer.set_colorkey(C_KEY)
+		self.buffer.fill (b.COLOR_CYAN)
+		r = self.rect
+		pygame.draw.polygon (self.buffer, C_KEY, [
+			r.midleft, (r.right, r.centery-10),
+			(r.right, r.centery+10), r.midleft
+		], 0)
+		self.value = 0
+
+class Tape (b.Layer):
 
 	def __init__ (self, dim):
 		super().__init__((dim[0], dim[1]*2))
@@ -30,7 +44,10 @@ class Tape (b.EFISElement):
 		for n in range(M_COUNT):
 			pygame.draw.line (self.m_layer, M_COLOR, (0, m_yl[n]), (M_LONG, m_yl[n]), 2)
 			pygame.draw.line (self.m_layer, M_COLOR, (0, m_ys[n]), (M_SHORT, m_ys[n]), 2)
+		self.bug = Bug ()
+		self.layers.append (self.bug)
 		self.centre = 10
+		self.bug.value = 1
 		self.set_value(0)
 	
 	def set_value (self, value):
@@ -39,14 +56,14 @@ class Tape (b.EFISElement):
 			self.centre = int(value)
 
 			# reset range markers
-			pygame.draw.line (self.buffer, C_KEY, (6, 0), (6, self.rect.h), 12)
+			pygame.draw.line (self.buffer, C_KEY, (6, 0), (6, self.rect.h), 20)
 			for rg in self.ranges:
 				m_b = int(self.M_SPACING * (M_CENTRE - rg[0] + self.centre))
 				m_t = int(self.M_SPACING * (M_CENTRE - rg[1] + self.centre))
 				pygame.draw.line (self.buffer, rg[2], (6, m_b), (6, m_t), 12)
 				
 			self.buffer.blit (self.m_layer, (0, 0))
-
+		
 			# reset marker numeric values
 			val_range = range (self.centre+M_CENTRE, self.centre-M_CENTRE, -1)
 			for n in range(M_COUNT):
@@ -59,18 +76,23 @@ class Tape (b.EFISElement):
 		
 		# set tape offset relative to centre (target centery = M_CENTRE/2)
 		self.rect.centery = int(self.M_SPACING * (M_CENTRE/2 - (self.centre - value)))
+		# reset bug position
+		self.bug.rect.centery = int(self.M_SPACING * (M_CENTRE - self.bug.value + self.centre))
 		
 
-class ALT (b.EFISElement):
-	def __init__ (self):
-		super().__init__((130, 450))
-		self.tape = Tape((130, 450))
+class ALT (b.Widget):
+	def __init__ (self, sfc, rect):
+		super().__init__(sfc, rect)
+		self.tape = Tape(self.rect.size)
 		self.gauge = gauge.Display ()
 		self.gauge.rect.midleft = (0, self.rect.centery)
-		self.elements.append (self.tape)
-		self.elements.append (self.gauge)
+		self.layers.append (self.tape)
+		self.layers.append (self.gauge)
 		self.set_value (0)
-		
+
+	def set_bug (self, alt):
+		self.tape.bug.value = alt/100
+				
 	def set_value (self, alt):
 		self.tape.set_value(alt/100)
 		self.gauge.set_value (alt)

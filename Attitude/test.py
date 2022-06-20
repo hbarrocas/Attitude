@@ -1,15 +1,26 @@
 import pygame, sys
-from Attitude import efis
+from Attitude.pfd import PFD
 
 value = {
 	"ASI": 0,
 	"ALT": 0,
+	"ALT_BUG": 0,
+	"BARO": 1013,
+	"GS": 0,
 	"VSI": 0,
 	"ATT": {"bank": 0, "pitch": 0},
 	"HDG": 270,
 	"SSI": 0
 }
 
+def action_inc ():
+	global value
+	value["ALT_BUG"] += 10
+	
+def action_dec ():
+	global value
+	value["ALT_BUG"] -= 10
+	
 def action_left ():
 	global value
 	value["ATT"]["bank"] -= 2
@@ -25,6 +36,7 @@ def action_right ():
 def action_up ():
 	global value
 	value["ASI"] += 1
+	value["GS"] += 1
 	value["ALT"] += 5
 	value["ATT"]["pitch"] -= 1
 	value["VSI"] += 0.2
@@ -32,16 +44,19 @@ def action_up ():
 def action_down ():
 	global value
 	value["ASI"] -= 1
+	value["GS"] -= 1
 	value["ALT"] -= 5
 	value["ATT"]["pitch"] += 1
 	value["VSI"] -= 0.2
 		
 def exit ():
-	efis.quit()
+	pygame.quit()
 	sys.exit(0)
 
 # Setup key bindings
 keymap = {
+	pygame.K_PERIOD: action_inc,
+	pygame.K_COMMA: action_dec,
 	pygame.K_UP: action_up,
 	pygame.K_DOWN: action_down,
 	pygame.K_LEFT: action_left,
@@ -52,14 +67,20 @@ keymap = {
 def run ():		
 	global value
 	global keymap
-		
-	efis.init()
+	
+	pygame.init ()
+	display = pygame.display.set_mode((800, 800))		
+	pfd = PFD(display, display.get_rect())
 
 	while 1:
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN and event.key in keymap:
 				keymap[event.key]()
 
-		efis.set_value (value)
-		efis.refresh ()
+		pfd.widget["ALT"].set_bug(value["ALT_BUG"])
+		pfd.set_value (value)
+
+		pfd.render()
+		
+		pygame.display.flip()
 

@@ -10,13 +10,13 @@ F_FILE = b.FONT_FILE
 F_SIZE = b.FONT_SIZE_TAPE
 # Markers
 M_COLOR = b.COLOR_MARKER
-M_SHORT = 12
-M_LONG = 25
+M_SHORT = 8
+M_LONG = 16
 M_COUNT = 4
 M_CENTRE = 2
 
 
-class Scale (b.EFISElement):
+class Scale (b.Layer):
 
 	def __init__ (self, dim):
 		super().__init__(dim)
@@ -36,12 +36,12 @@ class Scale (b.EFISElement):
 			pygame.draw.line (self.buffer, M_COLOR, (self.rect.w, m_ys[n]), (self.rect.w-M_SHORT, m_ys[n]), 2)
 		
 		
-class VSI (b.EFISElement):
+class VSI (b.Widget):
 	
-	def __init__ (self):
-		super().__init__((50, 450))
+	def __init__ (self, sfc, rect):
+		super().__init__(sfc, rect)
 		self.scale = Scale(self.rect.size)
-		self.elements.append (self.scale)
+		self.layers.append (self.scale)
 		
 	def set_value (self, value):
 		self.buffer.fill (C_KEY)

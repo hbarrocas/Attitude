@@ -8,7 +8,7 @@ F_COLOR_FG = b.COLOR_GAUGE_FG
 F_COLOR_BG = b.COLOR_GAUGE_BG
 C_KEY = b.COLOR_KEY
 
-class DisplayRoller (b.EFISElement):
+class DisplayRoller (b.Layer):
 
 	def __init__ (self):
 		super().__init__((40, R_SIZE * 6))
@@ -26,10 +26,10 @@ class DisplayRoller (b.EFISElement):
 		self.rect.top = (-offset if value > 0 else -5+offset) * R_SIZE + 4
 
 
-class Display (b.EFISElement):
+class Display (b.Layer):
 	
 	def __init__ (self):
-		super().__init__((130, 48))
+		super().__init__((110, 40))
 		self.buffer.set_colorkey(C_KEY)
 		self.buffer.fill (C_KEY)
 		self.text = pygame.font.Font (F_FILE, F_SIZE)
@@ -54,11 +54,11 @@ class Display (b.EFISElement):
 		self.FLdisp.fill (F_COLOR_BG)
 
 		# Rolling numbers' window (20 feet units)
-		w = pygame.Rect ((self.rect.right-40, self.rect.top+6), (38, 30))
+		w = pygame.Rect ((self.rect.right-40, self.rect.top+6), (32, 20))
 		self.buffer.set_clip (w)
 		self.roller = DisplayRoller ()
 		self.roller.rect.right = self.rect.w
-		self.elements.append (self.roller)
+		self.layers.append (self.roller)
 	
 	def set_value (self, value):
 		self.roller.set_value (value)

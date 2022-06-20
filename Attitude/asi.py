@@ -9,11 +9,11 @@ F_COLOR = b.COLOR_TAPE_FG
 M_COLOR = b.COLOR_MARKER
 M_COUNT = 10
 M_CENTRE = 5  # M_COUNT / 2
-M_SHORT = 10
-M_LONG  = 25
+M_SHORT = 8
+M_LONG  = 20
 
 
-class Tape (b.EFISElement):
+class Tape (b.Layer):
 
 	def __init__ (self, dim):
 		super().__init__((dim[0], dim[1]*2))
@@ -62,10 +62,10 @@ class Tape (b.EFISElement):
 		self.rect.centery = int(self.M_SPACING * (M_CENTRE/2 - (self.centre - value)))
 		
 
-class ASI (b.EFISElement):
-	def __init__ (self):
-		super().__init__((100, 450))
-		self.tape = Tape((100, 450))
+class ASI (b.Widget):
+	def __init__ (self, sfc, rect):
+		super().__init__(sfc, rect)
+		self.tape = Tape(self.rect.size)
 		
 		# Airspeed ranges (VS, VA, VNE, etc)
 		self.tape.ranges[len(self.tape.ranges):] = [
@@ -75,8 +75,8 @@ class ASI (b.EFISElement):
 		]
 		self.gauge = gauge.Display ()
 		self.gauge.rect.midright = (self.rect.right, self.rect.centery)
-		self.elements.append(self.tape)
-		self.elements.append(self.gauge)
+		self.layers.append(self.tape)
+		self.layers.append(self.gauge)
 		self.set_value (0)
 		
 	def set_value (self, ias):
