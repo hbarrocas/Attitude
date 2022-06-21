@@ -17,11 +17,9 @@ Included in this directory is Attitude.xml, a FlightGear generic protocol file t
 
 To use it, we need to copy Attitude.xml into FlightGear's data tree. In my debian system:
 
----
-
+```
 $ sudo cp Attitude.xml /usr/games/flightgear/Protocol
-
----
+```
 
 FlightGear also keeps a per-user configuration under ~/.fgfs but I've been unsuccessful in using this protocol file from there.
 
@@ -29,11 +27,9 @@ Once copied, we can invoke Attitude's client (net.py) which will be listening on
 
 Next, invoke FlightGear, as follows:
 
----
-
+```
 $ fgfs --generic=socket,out,10,127.0.0.1,12345,tcp,Attitude
-
----
+```
 
 Once the simulator loads, it will connect to Attitude and live data will drive the PFD.
 
