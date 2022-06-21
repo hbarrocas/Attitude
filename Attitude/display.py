@@ -23,6 +23,7 @@ class Baro (b.Widget):
 		self.buffer.set_clip (pygame.Rect((r.right+5, 0), (self.rect.w-r.right-5, self.rect.h)))
 		
 	def set_value (self, value):
+		value = float(value)
 		fig = self.text_val.render (str(int(value)), True, b.COLOR_CYAN)
 		r = fig.get_rect()
 		r.bottomright = self.buffer.get_rect().bottomright
@@ -44,6 +45,7 @@ class GSpeed (b.Widget):
 		self.buffer.set_clip (pygame.Rect((r.right+5, 0), (self.rect.w-r.right-5, self.rect.h)))
 		
 	def set_value (self, value):
+		value = float(value)
 		fig = self.text_val.render (str(int(value)), True, b.COLOR_MAGENTA)
 		r = fig.get_rect()
 		r.bottomright = self.buffer.get_rect().bottomright

@@ -36,6 +36,7 @@ class Area:
 		self.layers = []
 	
 	def render (self):
+		# Render all layers
 		for x in self.layers:
 			self.buffer.blit (x.surface(), x.rect)
 

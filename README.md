@@ -1,11 +1,11 @@
 # Attitude
-An implementation of aircraft glass cockpit display in PyGame                                                     
+An implementation of aircraft glass cockpit display in [PyGame](https://www.pygame.org/)                                                     
 
 ### Inspiration                                                                                                   
 
 The inspiration to undertake this project comes from the need for real looking instruments to complement my Flight Simulator Cockpit (sorry, still no pictures or any form of public display of the project itself).                 
 
-I intend to build this simulator chair as generic as possible, in the sense that it won't be based on any particular aircraft model and, its flight controls should work as a standard joystick (HID) device. My current flight simulation software is FlightGear, but I would be confident it should be easily adaptable to other simulation platforms.                 
+I intend to build this simulator chair as generic as possible, in the sense that it won't be based on any particular aircraft model and, its flight controls should work as a standard joystick (HID) device. My current flight simulation software is [FlightGear](https://www.flightgear.org/), but I'm be confident it should be easily adaptable to other simulation platforms.                 
 
 ### Description                                                                                                   
 
@@ -23,7 +23,7 @@ If you're brave enough as to pursue such a project, I, THE AUTHOR WILL BE NO RES
 * Side Slip Indicator
 * Compass
 
-which makes up for the old "six-pack" needed for VFR flight. Some features still require some work (e.g.: The altimeter doesn't have a Datum selector to set the current atmospheric pressure).
+The old "six-pack" needed for VFR flight, now on a screen, called Primary Flight Display (PFD).
 
 ### Future of Attitude
 

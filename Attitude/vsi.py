@@ -44,6 +44,7 @@ class VSI (b.Widget):
 		self.layers.append (self.scale)
 		
 	def set_value (self, value):
+		value = float(value)/1000
 		self.buffer.fill (C_KEY)
 		value = value if value < 2 else 2
 		value = value if value > -2 else -2
