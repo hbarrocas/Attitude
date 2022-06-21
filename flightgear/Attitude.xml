@@ -1,0 +1,73 @@
+<?xml version="1.0"?> 
+ <PropertyList>
+ <generic>
+ 
+    <output>
+      <line_separator>newline</line_separator>
+      <var_separator>,</var_separator>
+      <binary_mode>false</binary_mode>
+ 
+      <chunk>
+        <name>speed</name>
+        <format>{"ASI":"%03.2f"</format>
+        <type>float</type>
+        <node>/instrumentation/airspeed-indicator/indicated-speed-kt</node>
+      </chunk>
+ 
+      <chunk>
+        <name>Altimeter</name>
+        <format>"ALT":"%f"</format>
+        <type>float</type>
+        <node>/instrumentation/altimeter/indicated-altitude-ft</node>
+      </chunk>
+ 
+      <chunk>
+        <name>Altimeter datum</name>
+        <format>"BARO":"%d"</format>
+        <node>/instrumentation/altimeter/setting-hpa</node>
+      </chunk>
+ 
+      <chunk>
+        <name>Ground Speed</name>
+        <format>"GS":"%d"</format>
+        <node>/instrumentation/gps/indicated-ground-speed-kt</node>
+      </chunk>
+ 
+      <chunk>
+        <name>Vertical speed</name>
+        <format>"VSI":"%f"</format>
+        <type>float</type>
+        <node>/instrumentation/vertical-speed-indicator/indicated-speed-fpm</node>
+      </chunk>
+ 
+      <chunk>
+        <name>heading (deg)</name>
+        <format>"HDG":"%03.2f"</format>
+        <type>float</type>
+        <node>/instrumentation/heading-indicator/indicated-heading-deg</node>
+      </chunk>
+ 
+      <chunk>
+        <name>Slip-skid indicator</name>
+        <format>"SSI":"%03.2f"</format>
+        <type>float</type>
+        <node>/instrumentation/slip-skid-ball/indicated-slip-skid</node>
+      </chunk>
+ 
+      <chunk>
+        <name>pitch angle (deg)</name>
+        <format>"ATT":{"pitch":"%03.2f"</format>
+        <type>float</type>
+        <node>/orientation/pitch-deg</node>
+      </chunk>
+      
+      <chunk>
+        <name>Roll angle (deg)</name>
+        <format>"bank":"%03.2f"}}</format>
+        <type>float</type>
+        <node>/orientation/roll-deg</node>
+      </chunk>
+   </output>
+ 
+ </generic>
+ </PropertyList>

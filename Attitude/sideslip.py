@@ -46,8 +46,9 @@ class SlipIndicator (b.Widget):
 		self.set_value(0)
 		
 	def set_value (self, value):
+		value = float(value)
 		value = value if value < 1 else 1
 		value = value if value > -1 else -1
-		self.ball.offset ((value + 1) * int((self.rect.w - self.ball.rect.w)/2))
+		self.ball.offset ((-value + 1) * int((self.rect.w - self.ball.rect.w)/2))
 		self.buffer.fill(F_COLOR_BG)
 		

@@ -101,5 +101,5 @@ class ATTInd (b.Widget):
 		self.layers.append (self.overlay)
 	
 	def set_value (self, value):
-		self.horizon.set_attitude (value["bank"], value["pitch"])
+		self.horizon.set_attitude (float(value["bank"]), float(value["pitch"]))
 		

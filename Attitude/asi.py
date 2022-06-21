@@ -6,6 +6,7 @@ C_KEY = b.COLOR_KEY
 F_FILE = b.FONT_FILE
 F_SIZE = b.FONT_SIZE_TAPE
 F_COLOR = b.COLOR_TAPE_FG
+F_COLOR_BG = b.COLOR_TAPE_BG
 M_COLOR = b.COLOR_MARKER
 M_COUNT = 10
 M_CENTRE = 5  # M_COUNT / 2
@@ -80,6 +81,8 @@ class ASI (b.Widget):
 		self.set_value (0)
 		
 	def set_value (self, ias):
+		ias = float(ias)
 		ias = 0 if ias < 0 else ias
+		self.buffer.fill(F_COLOR_BG)
 		self.tape.set_value (ias/10)
-		self.gauge.set_value (ias)
+		self.gauge.set_value (int(ias))

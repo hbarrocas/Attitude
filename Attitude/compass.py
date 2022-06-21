@@ -122,6 +122,8 @@ class Compass (b.Widget):
 		self.set_value(0)
 		
 	def set_value (self, value):
+		value = float(value)
+		self.buffer.fill(F_COLOR_BG)
 		self.tape.set_value(value)
-		self.gauge.set_value(value)
+		self.gauge.set_value(int(value))
 

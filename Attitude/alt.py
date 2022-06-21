@@ -94,5 +94,6 @@ class ALT (b.Widget):
 		self.tape.bug.value = alt/100
 				
 	def set_value (self, alt):
+		alt = float(alt)
 		self.tape.set_value(alt/100)
 		self.gauge.set_value (alt)
