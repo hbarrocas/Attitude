@@ -1,4 +1,7 @@
 # Attitude
+
+![Attitude Screenshot](attitude-screenshot.png)
+
 An implementation of aircraft glass cockpit display in [PyGame](https://www.pygame.org/)                                                     
 
 ### Inspiration                                                                                                   
