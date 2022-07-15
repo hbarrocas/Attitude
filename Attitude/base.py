@@ -30,52 +30,52 @@ COLOR_KEY = (0, 0, 0)
 
 class Area:
 
-	def __init__ (self, sfc):
-		self.buffer = sfc
-		self.rect = sfc.get_rect()
-		self.layers = []
+    def __init__ (self, sfc):
+        self.buffer = sfc
+        self.rect = sfc.get_rect()
+        self.layers = []
 	
-	def render (self):
-		# Render all layers
-		for x in self.layers:
-			self.buffer.blit (x.surface(), x.rect)
+    def render (self):
+        # Render all layers
+        for x in self.layers:
+            self.buffer.blit (x.surface(), x.rect)
 
 
 class Layer (Area):
 	
-	def __init__ (self, size):
-		super().__init__(pygame.Surface(size))
+    def __init__ (self, size):
+        super().__init__(pygame.Surface(size))
 		
-	def surface (self):
-		self.render()
-		return self.buffer
+    def surface (self):
+        self.render()
+        return self.buffer
 
 
 class Disabled (Layer):
 	
-	def __init__ (self, size):
-		super().__init__(size)
-		self.buffer.set_colorkey (COLOR_KEY)
-		pygame.draw.rect (self.buffer, COLOR_DISABLED, self.rect, 8)
-		pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topleft, self.rect.bottomright, 8)
-		pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topright, self.rect.bottomleft, 8)
+    def __init__ (self, size):
+        super().__init__(size)
+        self.buffer.set_colorkey (COLOR_KEY)
+        pygame.draw.rect (self.buffer, COLOR_DISABLED, self.rect, 8)
+        pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topleft, self.rect.bottomright, 8)
+        pygame.draw.line (self.buffer, COLOR_DISABLED, self.rect.topright, self.rect.bottomleft, 8)
 
 
 class Widget (Area):
 
-	def __init__ (self, sfc, rect):
-		super().__init__ (sfc.subsurface(rect))
-		self._disabled = Disabled (rect.size)
-		
-	def disable (self):
-		if self._disabled not in self.layers:
-			self.layers.append (self._disabled)
+    def __init__ (self, sfc, rect):
+        super().__init__ (sfc.subsurface(rect))
+        self._disabled = Disabled (rect.size)
+	
+    def disable (self):
+        if self._disabled not in self.layers:
+            self.layers.append (self._disabled)
 
-	def enable (self):
-		if self._disabled in self.layers:
-			self.layers.remove (self._disabled)
+    def enable (self):
+        if self._disabled in self.layers:
+            self.layers.remove (self._disabled)
 
 
 # Utility functions
 def radial (centre, radius, angle):
-	return (centre[0]+radius*math.cos(angle), centre[1]-radius*math.sin(angle))
+    return (centre[0]+radius*math.cos(angle), centre[1]-radius*math.sin(angle))
