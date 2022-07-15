@@ -48,6 +48,13 @@
       </chunk>
  
       <chunk>
+        <name>heading bug (deg)</name>
+        <format>"HDGBUG":"%03d"</format>
+        <type>int</type>
+        <node>/autopilot/settings/heading-bug-deg</node>
+      </chunk>
+ 
+      <chunk>
         <name>Slip-skid indicator</name>
         <format>"SSI":"%03.2f"</format>
         <type>float</type>

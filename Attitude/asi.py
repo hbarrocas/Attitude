@@ -1,6 +1,7 @@
 import pygame
 import Attitude.base as b
-import Attitude.asigauge as gauge
+import Attitude.tape as t
+import Attitude.gauge as gauge
 
 C_KEY = b.COLOR_KEY
 F_FILE = b.FONT_FILE
@@ -14,75 +15,30 @@ M_SHORT = 8
 M_LONG  = 20
 
 
-class Tape (b.Layer):
-
-	def __init__ (self, dim):
-		super().__init__((dim[0], dim[1]*2))
-		self.M_SPACING = int(self.buffer.get_rect().h/M_COUNT)
-		self.text = pygame.font.Font (F_FILE, F_SIZE)
-		self.textarea = {}
-		self.print_f = "{}"
-		self.factor = 10
-		self.ranges = [(0, 999999, b.COLOR_DARKGREY)]
-		self.m_layer = pygame.Surface (self.buffer.get_rect().size)
-		self.m_layer.set_colorkey(C_KEY)
-		m_yl = range (0, self.buffer.get_rect().h, self.M_SPACING)
-		m_ys = range (int(self.M_SPACING/2), self.buffer.get_rect().h, self.M_SPACING)
-		for n in range(M_COUNT):
-			pygame.draw.line (self.m_layer, M_COLOR, (self.rect.w, m_yl[n]), (self.rect.w - M_LONG, m_yl[n]), 2)
-			pygame.draw.line (self.m_layer, M_COLOR, (self.rect.w, m_ys[n]), (self.rect.w - M_SHORT, m_ys[n]), 2)
-		self.centre = 10
-		self.set_value(0)
-	
-	def set_value (self, value):
-		if value < self.centre -1 or value > self.centre + 1:
-			# Set centre to nearest integer
-			# Leave at 4 if value < 4 (scale lower end = 0)
-			self.centre = int(value) if value > 4 else 4
-
-			# reset range markers
-			pygame.draw.line (self.buffer, C_KEY, (self.rect.w - 6, 0), (self.rect.w - 6, self.rect.h), 12)
-			for rg in self.ranges:
-				m_b = int(self.M_SPACING * (M_CENTRE - rg[0] + self.centre))
-				m_t = int(self.M_SPACING * (M_CENTRE - rg[1] + self.centre))
-				pygame.draw.line (self.buffer, rg[2], (self.rect.w - 6, m_b), (self.rect.w - 6, m_t), 12)
-				
-			self.buffer.blit (self.m_layer, (0, 0))
-
-			# reset marker numeric values
-			val_range = range (self.centre+M_CENTRE, self.centre-M_CENTRE, -1)
-			for n in range(M_COUNT):
-				if n in self.textarea: self.buffer.fill (C_KEY, self.textarea[n])
-				label = self.print_f.format(val_range[n] * self.factor)
-				fig = self.text.render (label, True, F_COLOR)
-				r = fig.get_rect()
-				r.midright = (self.rect.w - M_LONG - 5, self.M_SPACING * n)
-				self.textarea[n] = self.buffer.blit (fig, r)
-		
-		# set tape offset relative to centre (target centery = M_CENTRE/2)
-		self.rect.centery = int(self.M_SPACING * (M_CENTRE/2 - (self.centre - value)))
-		
-
 class ASI (b.Widget):
-	def __init__ (self, sfc, rect):
-		super().__init__(sfc, rect)
-		self.tape = Tape(self.rect.size)
+    def __init__ (self, sfc, rect):
+        super().__init__(sfc, rect)
+        tape_size = (rect.width, rect.height*2)
+        self.tape = t.Tape(tape_size, t.O_RIGHT, t.DFL_ATTR)
+        self.tape.scale.m_value = lambda x : x * 10
+        # Airspeed ranges (VS, VA, VNE, etc)
+        self.tape.ranges[len(self.tape.ranges):] = [
+            (0, 30, 15, b.COLOR_DARKGREY),
+            (4.8, 12, 15, b.COLOR_GREEN),
+            (4, 8.5, 6, (255,255,255)),
+            (12, 14.8, 15, b.COLOR_YELLOW),
+            (14.8, 999, 15, b.COLOR_RED)
+        ]
+        self.gauge = gauge.Display ((80, 40), gauge.O_RIGHT)
+        self.gauge.rect.midright = (self.rect.right, self.rect.centery)
+        self.layers.append(self.tape)
+        self.layers.append(self.gauge)
+        self.set_value (0)
 		
-		# Airspeed ranges (VS, VA, VNE, etc)
-		self.tape.ranges[len(self.tape.ranges):] = [
-			(4.8, 12, b.COLOR_GREEN),
-			(12, 14.8, b.COLOR_YELLOW),
-			(14.8, 999, b.COLOR_RED)
-		]
-		self.gauge = gauge.Display ()
-		self.gauge.rect.midright = (self.rect.right, self.rect.centery)
-		self.layers.append(self.tape)
-		self.layers.append(self.gauge)
-		self.set_value (0)
-		
-	def set_value (self, ias):
-		ias = float(ias)
-		ias = 0 if ias < 0 else ias
-		self.buffer.fill(F_COLOR_BG)
-		self.tape.set_value (ias/10)
-		self.gauge.set_value (int(ias))
+    def set_value (self, ias):
+        ias = float(ias)
+        ias = 0 if ias < 0 else ias
+        self.buffer.fill (F_COLOR_BG)
+        self.tape.set_centre (ias/10 if ias > 40 else 4)
+        self.tape.set_offset (self.rect.centery - self.tape.get_position(ias/10))
+        self.gauge.set_value (str(int(ias)))

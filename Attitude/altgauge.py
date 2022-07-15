@@ -1,5 +1,6 @@
 import pygame
 import Attitude.base as b
+import Attitude.gauge as gauge
 
 F_FILE = b.FONT_FILE
 F_SIZE = b.FONT_SIZE_GAUGE
@@ -8,63 +9,41 @@ F_COLOR_FG = b.COLOR_GAUGE_FG
 F_COLOR_BG = b.COLOR_GAUGE_BG
 C_KEY = b.COLOR_KEY
 
+
 class DisplayRoller (b.Layer):
 
-	def __init__ (self):
-		super().__init__((40, R_SIZE * 6))
-		self.buffer.fill (F_COLOR_BG, self.rect)
-		self.text = pygame.font.Font (F_FILE, R_SIZE)
-		num_y = range (0, R_SIZE*6, R_SIZE)
-		for n in range(6):
-			fig = self.text.render ("{0:0>2}".format((n % 5)*20), True, F_COLOR_FG)
-			r = fig.get_rect()
-			r.top = num_y[n]
-			self.buffer.blit (fig, r)
+    def __init__ (self):
+        super().__init__((40, R_SIZE * 6))
+        self.buffer.fill (F_COLOR_BG, self.rect)
+        self.text = pygame.font.Font (F_FILE, R_SIZE)
+        num_y = range (0, R_SIZE*6, R_SIZE)
+        for n in range(6):
+            fig = self.text.render ("{0:0>2}".format((n % 5)*20), True, F_COLOR_FG)
+            r = fig.get_rect()
+            r.top = num_y[n]
+            self.buffer.blit (fig, r)
 
-	def set_value (self, value):
-		offset = (value % 100) / 20
-		self.rect.top = (-offset if value > 0 else -5+offset) * R_SIZE + 4
+    def set_value (self, value):
+        offset = (value % 100) / 20
+        self.rect.top = (-offset if value > 0 else -5+offset) * R_SIZE + 4
 
 
-class Display (b.Layer):
-	
-	def __init__ (self):
-		super().__init__((110, 40))
-		self.buffer.set_colorkey(C_KEY)
-		self.buffer.fill (C_KEY)
-		self.text = pygame.font.Font (F_FILE, F_SIZE)
+class Display (gauge.Display):
 
-		# Frame shape
-		r = self.buffer.get_rect()
-		pygame.draw.polygon (self.buffer, F_COLOR_FG, [
-			r.midleft, (r.left+10, int(r.h/3)),
-			(r.left+10, r.top), (r.right-2, r.top),
-			(r.right-2, r.bottom-2), (r.left+10, r.bottom-2),
-			(r.left+10, 2*int(r.h/3)), r.midleft
-		], 0)
-		pygame.draw.polygon (self.buffer, F_COLOR_BG, [
-			(r.left+3, r.centery), (r.left+13, int(r.h/3)),
-			(r.left+13, 2*int(r.h/3)), (r.left+3, r.centery)
-		], 0)
-		r.size = (r.width - 14, r.height - 5)
-		r.topleft = (12, 2)
-		
-		# Flight Level display (hundred feet units)
-		self.FLdisp = self.buffer.subsurface (r)
-		self.FLdisp.fill (F_COLOR_BG)
+    def __init__ (self, size):
+        super().__init__(size, gauge.O_LEFT)
+        fld_r = self.display.get_rect()
+        fld_r.width = 60
+        #fld_r.topleft = (0, 0)
+        self.display = self.display.subsurface(fld_r)
+        r = self.buffer.get_rect()
+        rd_r = pygame.Rect((0, 0), (32, 18))
+        rd_r.topright = (r.right-4, r.top+8)
+        self.buffer.set_clip (rd_r)
+        self.roller = DisplayRoller()
+        self.roller.rect = rd_r
+        self.layers.append (self.roller)		
 
-		# Rolling numbers' window (20 feet units)
-		w = pygame.Rect ((self.rect.right-40, self.rect.top+6), (32, 20))
-		self.buffer.set_clip (w)
-		self.roller = DisplayRoller ()
-		self.roller.rect.right = self.rect.w
-		self.layers.append (self.roller)
-	
-	def set_value (self, value):
-		self.roller.set_value (value)
-		self.FLdisp.fill (F_COLOR_BG)
-		fig = self.text.render (str(int(value/100)), True, F_COLOR_FG)
-		r = fig.get_rect()
-		r.right = self.rect.right-40-12		
-		self.FLdisp.blit (fig, r)
-		
+    def set_value (self, value):
+        self.roller.set_value (value)
+        super().set_value(str(int(value/100)))
